@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Welcome to PawPack!
+<div class="row text-center">
+    <div class="col">
+        <h1>Welcome to PawPack!</h1>
+    </div>
+</div>
 
-<div id="barks">
+<div class='row' id="barks">
     Loading...
 </div>
 
@@ -25,7 +29,7 @@ function LikeBtn(bark) {
 
 function formatBarkElement(bark) {
     let formattedBark = `
-    <div class='mb-4 bark' id='bark-${bark.id}'>
+    <div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 bark' id='bark-${bark.id}'>
         <p>${bark.content} </p>
         <div class ='btn-group'>${LikeBtn(bark)}</div>
     </div>`
@@ -50,4 +54,5 @@ xhr.onload = function() {
 xhr.send()
 
 </script>
+
 {% endblock content %}
