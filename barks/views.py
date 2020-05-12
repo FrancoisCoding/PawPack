@@ -15,6 +15,7 @@ def bark_list_view(request, *args, **kwargs):
     qs = Bark.objects.all()
     barks_list = [{"id": x.id, "content": x.content} for x in qs]
     data = {
+        "isUser": False,
         "response": barks_list
     }
     return JsonResponse(data)
