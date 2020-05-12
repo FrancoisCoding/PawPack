@@ -1,3 +1,4 @@
+import random
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render
 from .models import Bark
@@ -13,7 +14,8 @@ def bark_list_view(request, *args, **kwargs):
     REST API VIEW
     """
     qs = Bark.objects.all()
-    barks_list = [{"id": x.id, "content": x.content} for x in qs]
+    barks_list = [{"id": x.id, "content": x.content,
+                   "likes": random.randint(0, 122)} for x in qs]
     data = {
         "isUser": False,
         "response": barks_list

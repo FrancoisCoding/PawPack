@@ -14,8 +14,21 @@ const xhr = new XMLHttpRequest()
 const method = 'GET'
 const url = '/barks'
 const responseType = 'json'
+
+function handleDidLike (bark_id, currentCount) {
+    console.log(bark_id, currentCount)
+}
+
+function LikeBtn(bark) {
+    return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + bark.id + "," + bark.likes + ")>" + bark.likes + " Barks</button>"
+}
+
 function formatBarkElement(bark) {
-    let formattedBark = `<div class='mb-4 bark' id='bark-${bark.id}'><p> ${bark.content} </p></div>`
+    let formattedBark = `
+    <div class='mb-4 bark' id='bark-${bark.id}'>
+        <p>${bark.content} </p>
+        <div class ='btn-group'>${LikeBtn(bark)}</div>
+    </div>`
     return formattedBark
 }
 
