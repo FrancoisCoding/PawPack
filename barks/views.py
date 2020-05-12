@@ -1,12 +1,22 @@
 import random
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render
+from .forms import BarkForm
 from .models import Bark
 
 
 def home_view(request, *args, **kwargs):
     # return HttpResponse("<h1>Hello World</h1>")
     return render(request, "pages/home.html", context={}, status=200)
+
+
+def bark_create_view(request, *args, **kwargs):
+    form = BarkForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        form = BarkForm()
+    return render(request, 'components/form.html', context={"form": form})
 
 
 def bark_list_view(request, *args, **kwargs):
