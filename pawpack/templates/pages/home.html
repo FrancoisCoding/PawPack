@@ -3,7 +3,13 @@
 {% block content %}
 Welcome to PawPack!
 
+<div id="barks">
+    Loading...
+</div>
+
 <script>
+const barksElement = document.getElementById("barks")
+
 const xhr = new XMLHttpRequest()
 const method = 'GET'
 const url = '/barks'
@@ -13,7 +19,14 @@ xhr.responseType = responseType
 xhr.open(method, url)
 xhr.onload = function() {
     const serverResponse = xhr.response
-    var listedItems = serverResponse.response
+    let listedItems = serverResponse.response
+    let finalBarkStr = ''
+    let i;
+    for (i = 0; i < listedItems.length; i++) {
+        let currentItem = `<div class='mb-4'><h1> ${listedItems[i].id} </h1> <p> ${listedItems[i].content} </p></div>`
+        finalBarkStr += currentItem
+    }
+    barksElement.innerHTML = finalBarkStr
     console.log(listedItems)
 }
 xhr.send()
