@@ -8,6 +8,18 @@ def home_view(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
 
 
+def bark_list_view(request, *args, **kwargs):
+    """
+    REST API VIEW
+    """
+    qs = Bark.objects.all()
+    barks_list = [{"id": x.id, "content": x.content} for x in qs]
+    data = {
+        "response": barks_list
+    }
+    return JsonResponse(data)
+
+
 def bark_detail_view(request, bark_id, *args, **kwargs):
     """
     REST API VIEW
