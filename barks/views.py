@@ -4,7 +4,8 @@ from .models import Bark
 
 
 def home_view(request, *args, **kwargs):
-    return HttpResponse("<h1>Hello World</h1>")
+    # return HttpResponse("<h1>Hello World</h1>")
+    return render(request, "pages/home.html", context={}, status=200)
 
 
 def bark_detail_view(request, bark_id, *args, **kwargs):
