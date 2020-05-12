@@ -14,6 +14,10 @@ const xhr = new XMLHttpRequest()
 const method = 'GET'
 const url = '/barks'
 const responseType = 'json'
+function formatBarkElement(bark) {
+    let formattedBark = `<div class='mb-4 bark' id='bark-${bark.id}'><p> ${bark.content} </p></div>`
+    return formattedBark
+}
 
 xhr.responseType = responseType
 xhr.open(method, url)
@@ -23,7 +27,8 @@ xhr.onload = function() {
     let finalBarkStr = ''
     let i;
     for (i = 0; i < listedItems.length; i++) {
-        let currentItem = `<div class='mb-4'><h1> ${listedItems[i].id} </h1> <p> ${listedItems[i].content} </p></div>`
+        var barkObj = listedItems[i]
+        let currentItem = formatBarkElement(barkObj)
         finalBarkStr += currentItem
     }
     barksElement.innerHTML = finalBarkStr
