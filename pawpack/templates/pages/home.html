@@ -9,7 +9,7 @@
 
 <div class="row mb-3">
     <div class="col-md-4 mx-auto col-10">
-        <form class="form" method='POST' action='/create-bark' >
+        <form class="form" id='bark-create-form' method='POST' action='/create-bark' >
             {% csrf_token %}
             <input type="hidden" value='/' name='next' />
             <textarea class='form-control' name="content" placeholder='Time to Bark ...'></textarea>
@@ -23,12 +23,42 @@
 </div>
 
 <script>
-const barksElement = document.getElementById("barks")
 
-const xhr = new XMLHttpRequest()
-const method = 'GET'
-const url = '/barks'
-const responseType = 'json'
+function handleBarkCreateFormDidSubmit(event) {
+    event.preventDefault()
+}
+
+const barkCreateFormEl = document.getElementById("bark-create-form")
+
+barkCreateFormEl.addEventListener("submit", handleBarkCreateFormDidSubmit)
+
+const barksEl = document.getElementById("barks")
+
+const loadBarks = function(barksElement) {
+    const xhr = new XMLHttpRequest()
+    const method = 'GET'
+    const url = '/barks'
+    const responseType = 'json'
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        let listedItems = serverResponse.response
+        let finalBarkStr = ''
+        let i;
+        for (i = 0; i < listedItems.length; i++) {
+            var barkObj = listedItems[i]
+            let currentItem = formatBarkElement(barkObj)
+            finalBarkStr += currentItem
+        }
+        barksElement.innerHTML = finalBarkStr
+        console.log(listedItems)
+    }
+    xhr.send()
+}
+
+loadBarks(barksEl)
+
 
 function handleDidLike (bark_id, currentCount) {
     console.log(bark_id, currentCount)
@@ -47,22 +77,7 @@ function formatBarkElement(bark) {
     return formattedBark
 }
 
-xhr.responseType = responseType
-xhr.open(method, url)
-xhr.onload = function() {
-    const serverResponse = xhr.response
-    let listedItems = serverResponse.response
-    let finalBarkStr = ''
-    let i;
-    for (i = 0; i < listedItems.length; i++) {
-        var barkObj = listedItems[i]
-        let currentItem = formatBarkElement(barkObj)
-        finalBarkStr += currentItem
-    }
-    barksElement.innerHTML = finalBarkStr
-    console.log(listedItems)
-}
-xhr.send()
+
 
 </script>
 
