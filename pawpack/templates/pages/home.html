@@ -26,6 +26,20 @@
 
 function handleBarkCreateFormDidSubmit(event) {
     event.preventDefault()
+    const myForm = event.target
+    const myFormData = new FormData(myForm)
+    const url = myForm.getAttribute("action")
+    const method = myForm.getAttribute("method")
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        const barksEl = document.getElementById("barks")
+        loadBarks(barksEl)
+    }
+    xhr.send(myFormData)
+
+    console.log(endpoint,method)
 }
 
 const barkCreateFormEl = document.getElementById("bark-create-form")
