@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row text-center">
+    <div class="col">
+        <h1>Welcome to PawPack!</h1>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4 mx-auto col-10">
+        <form class="form" id='bark-create-form' method='POST' action='/create-bark' >
+            {% csrf_token %}
+            <input type="hidden" value='/' name='next' />
+            <textarea class='form-control' name="content" placeholder='Time to Bark ...'></textarea>
+            <button type='submit' class="btn btn-primary">Bark</button>
+        </form>
+    </div>
+</div>
+
+<div class='row' id="barks">
+    Loading...
+</div>
+
+<script>
+
+function handleBarkCreateFormDidSubmit(event) {
+    event.preventDefault()
+    const myForm = event.target
+    const myFormData = new FormData(myForm)
+    const url = myForm.getAttribute("action")
+    const method = myForm.getAttribute("method")
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        const barksEl = document.getElementById("barks")
+        loadBarks(barksEl)
+    }
+    xhr.send(myFormData)
+
+    console.log(endpoint,method)
+}
+
+const barkCreateFormEl = document.getElementById("bark-create-form")
+
+barkCreateFormEl.addEventListener("submit", handleBarkCreateFormDidSubmit)
+
+const barksEl = document.getElementById("barks")
+
+const loadBarks = function(barksElement) {
+    const xhr = new XMLHttpRequest()
+    const method = 'GET'
+    const url = '/barks'
+    const responseType = 'json'
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        let listedItems = serverResponse.response
+        let finalBarkStr = ''
+        let i;
+        for (i = 0; i < listedItems.length; i++) {
+            var barkObj = listedItems[i]
+            let currentItem = formatBarkElement(barkObj)
+            finalBarkStr += currentItem
+        }
+        barksElement.innerHTML = finalBarkStr
+        console.log(listedItems)
+    }
+    xhr.send()
+}
+
+loadBarks(barksEl)
+
+
+function handleDidLike (bark_id, currentCount) {
+    console.log(bark_id, currentCount)
+}
+
+function LikeBtn(bark) {
+    return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + bark.id + "," + bark.likes + ")>" + bark.likes + " Barks</button>"
+}
+
+function formatBarkElement(bark) {
+    let formattedBark = `
+    <div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 bark' id='bark-${bark.id}'>
+        <p>${bark.content} </p>
+        <div class ='btn-group'>${LikeBtn(bark)}</div>
+    </div>`
+    return formattedBark
+}
+
+
+
+</script>
+
+{% endblock content %}
